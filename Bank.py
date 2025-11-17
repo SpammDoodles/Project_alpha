@@ -2,6 +2,7 @@ import sys
 import time
 import json
 from datetime import datetime
+from passwords import hash_password, verify_password
 
 class BankAccount:
     initial_balance = 0
@@ -132,57 +133,75 @@ class User(BankAccount):
     @classmethod
     def sign_up(cls):
         name = input("Enter your account name: ").capitalize()
+
         while True:
-            password = input("Enter your password(must be greater than 8 digits and mixture of numbers and alphbets): ")
-            if  len(password)> 8 and any(c.isdigit() for c in password) and any(p.isalpha() for p in password):
+            password = input("Enter your password (must be >8 chars, mix of letters & digits): ")
+            if len(password) > 8 and any(c.isdigit() for c in password) and any(c.isalpha() for c in password):
                 break
-            print("The password didn't meet the requirement. try again")
+            print("The password didn't meet the requirement. Try again")
+
+        salt, hashed_password = hash_password(password)
+
         while True:
             try:
                 account_number = int(input("Enter the account number: "))
                 break
             except ValueError:
-                print("Invalid value enter.")
+                print("Invalid value entered.")
                 continue
-        print("Your account is being created")
-                
+
+        print("Your account is being created...")
+
         user_data = {
-            "name" : name,
-            "password" : password,
-            "account_number" : account_number,
-            "date_created" : str(datetime.today())
+            "name": name,
+            "salt": salt,
+            "hashed_password": hashed_password,
+            "account_number": account_number,
+            "date_created": str(datetime.today())
         }
+
         try:
-            with open("user.json","r") as f:
+            with open("user.json", "r") as f:
                 data = json.load(f)
-        except(FileNotFoundError, json.JSONDecodeError):
+        except (FileNotFoundError, json.JSONDecodeError):
             data = []
 
         data.append(user_data)
 
-        with open ("user.json","w") as f:
-            json.dump(data,f,indent = 4)
-            
-        return cls(name,password,account_number)
+        with open("user.json", "w") as f:
+            json.dump(data, f, indent=4)
+
+        return cls(name, "", account_number)
 
     @classmethod
     def sign_in(cls):
         name = input("Enter the username: ").capitalize()
         password = input("Enter the password: ")
-        acc_number = int(input("Enter the account number: "))
         try:
-            with open("user.json","r") as f:
-                user_data = json.load(f)
-            for user in user_data:
-                if user["name"] == name and user["password"] == password:
-                    print("Sign-in Successfull")
-                    return cls(user["name"],user["password"],user["account_number"])
-            print("Invalid Credential.Please Try Again.")
+            acc_number = int(input("Enter the account number: "))
+        except ValueError:
+            print("Invalid account number entered.")
             return None
-        except FileNotFoundError: 
+
+        try:
+            with open("user.json", "r") as f:
+                user_data = json.load(f)
+        except FileNotFoundError:
             print("No user found")
             return None
-                
+
+        for user in user_data:
+            if user["name"] == name and user["account_number"] == acc_number:
+                if verify_password(password, user["salt"], user["hashed_password"]):
+                    print("Sign-in Successful")
+                    return cls(user["name"], "", user["account_number"])
+                else:
+                    print("Invalid password.")
+                    return None
+
+        print("User not found.")
+        return None
+
 
     def main(self):
         while True:

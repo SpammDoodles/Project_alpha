@@ -1,5 +1,10 @@
-from getpass import getpass
+import hashlib
+import secrets
 
-password = getpass("Enter your password: ")
+def hash_password(password: str) -> tuple[str, str]:
+    salt = secrets.token_hex(16)
+    hashed = hashlib.sha256((salt + password).encode()).hexdigest()
+    return salt, hashed
 
-print(password)
+def verify_password(password: str, salt: str, hashed: str) -> bool:
+    return hashlib.sha256((salt + password).encode()).hexdigest() == hashed

@@ -1,44 +1,9 @@
 [
     {
-        "name": "test41",
-        "password": "abcd12345",
+        "name": "Charlie123",
+        "salt": "6e665557600117c6078dfcc0d3472439",
+        "hashed_password": "6a4e470bce7fe234a7bc422df8fa67837a2cf9db4da2228e1ef35f4c07008659",
         "account_number": 123,
-        "date_created": "2025-04-09 11:23:45.729974"
-    },
-    {
-        "name": "seriously",
-        "password": "12345qwert",
-        "account_number": 123,
-        "date_created": "2025-04-09 12:02:59.604571"
-    },
-    {
-        "name": "alooisas",
-        "password": "12345qwert",
-        "account_number": 1234,
-        "date_created": "2025-04-09 12:03:33.901620"
-    },
-    {
-        "name": "shiiit",
-        "password": "asdfg1234",
-        "account_number": 1234,
-        "date_created": "2025-04-09 12:04:18.760521"
-    },
-    {
-        "name": "dis",
-        "password": "12344asdf",
-        "account_number": 123,
-        "date_created": "2025-04-09 12:05:58.843199"
-    },
-    {
-        "name": "spam",
-        "password": "sadf12344a",
-        "account_number": 123,
-        "date_created": "2025-04-09 12:06:17.644728"
-    },
-    {
-        "name": "doodle",
-        "password": "12345asdfgh",
-        "account_number": 123,
-        "date_created": "2025-04-09 12:07:17.620458"
+        "date_created": "2025-11-17 13:43:02.497923"
     }
 ]
